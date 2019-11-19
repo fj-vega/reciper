@@ -3,16 +3,22 @@ import './App.css';
 import './svg-bg.css';
 import SearchBar from './components/SearchBar';
 import RecipesContainer from './components/RecipesContainer';
-import api from './api';
+import Spinner from './components/Spinner';
+import { getRecipes } from './api';
 
 
 export default () => {
   const [search, setSearch] = useState('');
   const [query, setQuery] = useState('');
   const [recipes, setRecipes] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    getRecipes();
+    (async () => {
+      const recipes = await getRecipes(query);
+      setRecipes(recipes);
+      setLoading(false);
+    })()
   }, [query]);
 
   const updateSearch = e => {
@@ -21,20 +27,15 @@ export default () => {
 
   const searchQuery = e => {
     e.preventDefault();
+    setLoading(true);
     setQuery(search);
     setSearch('');
   }
 
-  const getRecipes = async () => {
-    const url = `https://api.edamam.com/search?q=${query}&app_id=${api.id}&app_key=${api.key}`;
-
-    const response = await fetch(url, { mode: 'cors' });
-    const data = await response.json();
-    setRecipes(data.hits);
-  };
-
   return (
     <div className="App">
+      <small className="warning">The application is limited to 5 requests per minute</small>
+
       <div className="App-body">
         <h1 className="App-header">
           Search for a recipe
@@ -45,7 +46,9 @@ export default () => {
           searchQuery={ searchQuery } 
           updateSearch= { updateSearch } />
 
-        <RecipesContainer recipes={ recipes } />
+        {
+          loading ? <Spinner /> : <RecipesContainer recipes={ recipes } />
+        }
       </div>
 
       <footer className="footer">

@@ -15,6 +15,13 @@
   text-align: center;
 }
 
+.warning {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  color: #fff;
+}
+
 .App-body {
   min-height: calc(100vh - 100px); /* footer always pushed to bottom */
 }
@@ -134,6 +141,25 @@
 .footer-link {
   color: #dc4646;
   font-weight: bold;
+}
+
+.loader-spinner {
+  margin-top: 40px;
+  width: 100%;
+  max-width: 100px;
+
+  -webkit-animation: spinLoader 1000ms steps(12, end) infinite;
+          animation: spinLoader 1000ms steps(12, end) infinite;
+}
+
+@-webkit-keyframes spinLoader {
+  from { transform: rotate(0turn); }
+  to { transform: rotate(1turn); }
+}
+
+@keyframes spinLoader {
+  from { transform: rotate(0turn); }
+  to { transform: rotate(1turn); }
 }
 
 
